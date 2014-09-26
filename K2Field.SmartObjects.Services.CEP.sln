@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "K2Field.SmartObjects.Services.CEP.Model", "K2Field.SmartObjects.Services.CEP.Model\K2Field.SmartObjects.Services.CEP.Model.csproj", "{A629A369-4F97-471B-9579-220AE5BD7D63}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "K2Field.SmartObjects.Services.CEP.Data", "K2Field.SmartObjects.Services.CEP.Data\K2Field.SmartObjects.Services.CEP.Data.csproj", "{1242B853-3D91-4C30-84C9-6AAF075E8B8E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "K2Field.SmartObjects.Services.CEP.Sandbox", "K2Field.SmartObjects.Services.CEP.Sandbox\K2Field.SmartObjects.Services.CEP.Sandbox.csproj", "{59B915A2-8CC0-4ED2-83F1-AD11A64D91F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "K2Field.SmartObjects.Services.CEP.ES", "K2Field.SmartObjects.Services.CEP.ES\K2Field.SmartObjects.Services.CEP.ES.csproj", "{FF4368AE-37C3-4201-A857-D3DD0017CD8E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A629A369-4F97-471B-9579-220AE5BD7D63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A629A369-4F97-471B-9579-220AE5BD7D63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A629A369-4F97-471B-9579-220AE5BD7D63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A629A369-4F97-471B-9579-220AE5BD7D63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1242B853-3D91-4C30-84C9-6AAF075E8B8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1242B853-3D91-4C30-84C9-6AAF075E8B8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1242B853-3D91-4C30-84C9-6AAF075E8B8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1242B853-3D91-4C30-84C9-6AAF075E8B8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59B915A2-8CC0-4ED2-83F1-AD11A64D91F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59B915A2-8CC0-4ED2-83F1-AD11A64D91F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59B915A2-8CC0-4ED2-83F1-AD11A64D91F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59B915A2-8CC0-4ED2-83F1-AD11A64D91F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF4368AE-37C3-4201-A857-D3DD0017CD8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF4368AE-37C3-4201-A857-D3DD0017CD8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF4368AE-37C3-4201-A857-D3DD0017CD8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF4368AE-37C3-4201-A857-D3DD0017CD8E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
