@@ -61,7 +61,8 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService
                 // Get events to listen for
                 using (Data.ApplicationUnit unit = new Data.ApplicationUnit())
                 {
-                    events = unit.EventListeners.All(p => p.Origin.Equals("event store", StringComparison.CurrentCultureIgnoreCase)).ToList<Model.EventListener>();
+                    //events = unit.EventListeners.All(p => p.Origin.Equals("event store", StringComparison.CurrentCultureIgnoreCase)).ToList<Model.EventListener>();
+                    events = unit.EventListeners.All().ToList();
                     eventLog1.WriteEntry("Events #: " + events.Count, EventLogEntryType.Information);
                 }
             }
@@ -96,7 +97,7 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService
         {
             ConnectToEventStore().Wait();
             //_connection.SubscribeToAllAsync(false, Appeared, Dropped, EventStoreCredentials.Default);
-            foreach (Model.EventListener el in events)
+            foreach (Model.EventListener el in events.Where(p => p.Origin.Equals("event store", StringComparison.CurrentCultureIgnoreCase)).ToList<Model.EventListener>())
             {                
                 _connection.SubscribeToStreamAsync(el.EventSource, true, Appeared, Dropped, EventStoreCredentials.Default);
                 eventLog1.WriteEntry("Event Store listening to: " + el.EventSource, EventLogEntryType.Information);
@@ -109,7 +110,7 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService
 
             string json = string.Empty;
 
-            el = events.Where(p => p.EventType.Equals(resolvedEvent.Event.EventType, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
+            el = events.Where(p => p.EventType.Equals(resolvedEvent.Event.EventType, StringComparison.CurrentCultureIgnoreCase) && p.Origin.Equals("event store", StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
 
             if (el != null)
             {
@@ -228,7 +229,7 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService
                         ell.ProcessId = processinstanceid;
                         ell.Status = status;
                         ell.EventDate = DateTime.Now;
-                        ell.Event = el;
+                        ell.EventListenerId = el.Id;
 
                         unit.EventListenerLogs.Add(ell);
                         unit.SaveChanges();
@@ -248,24 +249,28 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService
                 string connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
                 var namespaceManager = NamespaceManager.CreateFromConnectionString(connectionString);
                 QueueClient Client = QueueClient.CreateFromConnectionString(connectionString, "demoqueue1");
-
+                eventLog1.WriteEntry("Azure Service Bus connected", EventLogEntryType.Information);
                 while (true)
                 {
                     BrokeredMessage message = Client.Receive();
-                    Model.EventListener el = events.Where(p => p.EventType.Equals(message.Label, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
-                    if (el != null)
+                    if (message != null)
                     {
-                        string json = string.Empty;
-                        try 
+                        Model.EventListener el = events.Where(p => p.EventType.Equals(message.Label, StringComparison.CurrentCultureIgnoreCase) && p.Origin.Equals("azure", StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
+                        if (el != null)
                         {
-                            json = message.GetBody<string>();
-                        } 
-                        catch { }
+                            string json = string.Empty;
+                            try
+                            {
+                                json = message.GetBody<string>();
+                            }
+                            catch { }
 
-                        int pid = 0;
-                        pid = StartWorkflow(el, json, message.MessageId);
-                        LogEventAsync(el, json, message.MessageId, pid.ToString(), "success");
-                    }
+                            int pid = 0;
+                            pid = StartWorkflow(el, json, message.MessageId);
+                            LogEventAsync(el, json, message.MessageId, pid.ToString(), "success");
+                            message.Complete();
+                        }
+                    } //message.Abandon();
                 }
 
                 //return true;

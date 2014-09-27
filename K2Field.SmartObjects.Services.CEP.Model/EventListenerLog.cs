@@ -20,6 +20,6 @@ namespace K2Field.SmartObjects.Services.CEP.Model
         public DateTime EventDate { get; set; }
         public string EventId { get; set; }
         public string Status { get; set; }
-        public virtual EventListener Event { get; set; }
+        public Guid EventListenerId { get; set; }
     }
 }

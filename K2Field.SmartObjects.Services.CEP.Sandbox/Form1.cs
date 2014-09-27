@@ -58,23 +58,23 @@ namespace K2Field.SmartObjects.Services.CEP.Sandbox
         private void btnInit_Click(object sender, EventArgs e)
         {
             // will reset database
-            //Database.SetInitializer(new DropCreateDatabaseAlways<Data.CEPListenerContext>());
+            Database.SetInitializer(new DropCreateDatabaseAlways<Data.CEPListenerContext>());
 
-            //CreateDatabase();
+            CreateDatabase();
 
-            _connection = EventStoreConnection.Create(new IPEndPoint(IPAddress.Loopback, 1113));
-            _connection.ConnectAsync();
+            //_connection = EventStoreConnection.Create(new IPEndPoint(IPAddress.Loopback, 1113));
+            //_connection.ConnectAsync();
 
-            //List<Model.EventListener> events = new List<Model.EventListener>();
+            ////List<Model.EventListener> events = new List<Model.EventListener>();
 
-            using(Data.ApplicationUnit unit = new ApplicationUnit())
-            {
-                events = unit.EventListeners.All(p => p.Origin.Equals("event store", StringComparison.CurrentCultureIgnoreCase)).ToList<Model.EventListener>();
-            }
+            //using(Data.ApplicationUnit unit = new ApplicationUnit())
+            //{
+            //    events = unit.EventListeners.All(p => p.Origin.Equals("event store", StringComparison.CurrentCultureIgnoreCase)).ToList<Model.EventListener>();
+            //}
 
-            StartReading();
-            ListenToAzureAsync();
-            btnInit.Text = "Running";
+            //StartReading();
+            //ListenToAzureAsync();
+            //btnInit.Text = "Running";
         }
 
         public void StartReading()
@@ -262,9 +262,20 @@ namespace K2Field.SmartObjects.Services.CEP.Sandbox
                 el1.IdDataField = "Event Id";
                 el1.IsActive = true;
 
+                Model.EventListener el2 = new Model.EventListener();
+                el2.Action = "workflow";
+                el2.Origin = "Azure";
+                el2.EventType = "customerevent";
+                el2.EventSource = "customerStream";
+                el2.EventDisplayName = "Customer Alert";
+                el2.ProcessName = @"CEP\CustomerReview";
+                el2.DataDataField = "Event Data";
+                el2.IdDataField = "Event Id";
+                el2.IsActive = true;
 
                 unit.EventListeners.Add(el);
                 unit.EventListeners.Add(el1);
+                unit.EventListeners.Add(el2);
                 unit.SaveChanges();
 
             }
