@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title></title>
+</head>
+<body>
+
+
+    <script src="Scripts/jquery-1.10.2.js"></script>
+    <script src="Scripts/jquery.signalR-2.1.2.js"></script>
+    <script src="http://localhost:8181/signalr/hubs"></script>
+    <script type="text/javascript">
+        $(function () {
+            //Set the hubs URL for the connection
+            $.connection.hub.url = "http://localhost:8181/signalr";
+
+            // Declare a proxy to reference the hub.
+            var cep = $.connection.cEPHub;
+
+            cep.client.sendEvent = function (ev) {
+                alert(ev.Id);
+                //// Html encode display name and message.
+                //var encodedName = $('<div />').text(name).html();
+                //var encodedMsg = $('<div />').text(message).html();
+                //// Add the message to the page.
+                //$('#discussion').append('<li><strong>' + encodedName
+                //    + '</strong>:&nbsp;&nbsp;' + encodedMsg + '</li>');
+            };
+
+            $.connection.hub.start().done(function () {
+                //$('#sendmessage').click(function () {
+                //    // Call the Send method on the hub.
+                //    chat.server.send($('#displayname').val(), $('#message').val());
+                //    // Clear text box and reset focus for next comment.
+                //    $('#message').val('').focus();
+                alert("started");
+                });
+        });
+
+    </script>
+
+        </body>
+        </html>

@@ -1,8 +1,12 @@
 ﻿using EventStore.ClientAPI;
 using K2Field.SmartObjects.Services.CEP.ES;
+using Microsoft.AspNet.SignalR;
+using Microsoft.Owin.Cors;
+using Microsoft.Owin.Hosting;
 using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
 using Microsoft.WindowsAzure;
+using Owin;
 using SourceCode.Workflow.Client;
 using System;
 using System.Collections.Generic;
@@ -42,7 +46,7 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService
         IEventStoreConnection _connection = null;        
         private List<Model.EventListener> events = new List<Model.EventListener>();
 
-
+        IDisposable SignalRServer = null;
 
         protected override void OnStart(string[] args)
         {
@@ -50,6 +54,19 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService
             GetEvents();
             ListenToEventStore();
             ListenToAzureAsync();
+
+
+            // This will *ONLY* bind to localhost, if you want to bind to all addresses
+            // use http://*:8080 to bind to all addresses. 
+            // See http://msdn.microsoft.com/en-us/library/system.net.httplistener.aspx 
+            // for more information.
+            string url = "http://localhost:8181";
+            SignalRServer = WebApp.Start<Startup>(url);
+            eventLog1.WriteEntry("CEP SignalR server running on " + url, EventLogEntryType.Information);
+            //using (WebApp.Start(url))
+            //{
+                
+            //}
         }
 
 
@@ -209,6 +226,12 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService
             return procid;
         }
 
+        public void PostEventNotification(Model.EventListenerLog ev)
+        {
+            GlobalHost.ConnectionManager.GetHubContext<CEPHub>().Clients.All.sendEvent(ev);
+                
+        }
+
         public async Task LogEventAsync(Model.EventListener el, string data, string eventid, string processinstanceid, string status)
         {
             await Task.Run(() =>
@@ -233,6 +256,8 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService
 
                         unit.EventListenerLogs.Add(ell);
                         unit.SaveChanges();
+
+                        PostEventNotification(ell);
                     }
                 }
                 catch (Exception ex)
@@ -281,6 +306,9 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService
 
         protected override void OnStop()
         {
+            _connection.Close();
+            _connection.Dispose();
+            SignalRServer.Dispose();
         }
 
 
@@ -297,5 +325,26 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService
 
         }
 
+    }
+
+    class Startup
+    {
+        public void Configuration(IAppBuilder app)
+        {
+            app.UseCors(CorsOptions.AllowAll);
+            app.MapSignalR();
+        }
+    }
+    public class CEPHub : Hub
+    {
+        public void Send(string name, string message, DateTime msgdatetime)
+        {
+            Clients.All.addMessage(name, message, msgdatetime);            
+        }
+
+        public void SendEvent(Model.EventListenerLog ev)
+        {
+            Clients.All.sendEvent(ev);
+        }
     }
 }
