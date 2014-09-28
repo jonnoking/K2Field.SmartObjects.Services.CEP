@@ -138,8 +138,12 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService
                     json = System.Text.Encoding.Default.GetString(resolvedEvent.Event.Data);
                 }
 
-                int pid = StartWorkflow(el, json, resolvedEvent.Event.EventId.ToString());
-                
+                int pid = 0;
+                if (el.Action.Equals("workflow", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    pid = StartWorkflow(el, json, resolvedEvent.Event.EventId.ToString());
+                }
+
                 LogEventAsync(el, json, resolvedEvent.Event.EventId.ToString(), pid.ToString(), "success");
                    
            }
@@ -291,8 +295,13 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService
                             catch { }
 
                             int pid = 0;
-                            pid = StartWorkflow(el, json, message.MessageId);
+                            if (el.Action.Equals("workflow", StringComparison.CurrentCultureIgnoreCase))
+                            {
+                                pid = StartWorkflow(el, json, message.MessageId);
+                            }
+
                             LogEventAsync(el, json, message.MessageId, pid.ToString(), "success");
+                            
                             message.Complete();
                         }
                     } //message.Abandon();

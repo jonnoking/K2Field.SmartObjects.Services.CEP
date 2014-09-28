@@ -66,6 +66,10 @@ See the file below for samples and descriptions of the values you may have in th
     <Event>EventReceived</Event>
     <Event>MessageReceived</Event>
     <Event>EventCleared</Event>
+    <Event>HubConnected</Event>
+    <Event>HubConnecting</Event>
+    <Event>HubReconnecting</Event>
+    <Event>HubDisconnected</Event>
   </Events>
   
   <!--<DefaultEventName> is the default event that the Rules composer will select when the designer creates a rule for the control-->
@@ -162,7 +166,7 @@ See the file below for samples and descriptions of the values you may have in th
     <Prop ID="EventData" friendlyname="Event Data" type="string" category="Event" refreshdisplay="false" inputlength="4000">
       <Value></Value>
     </Prop>
-    <Prop ID="EventDate" friendlyname="Event Date" type="string" category="Event" refreshdisplay="false">
+    <Prop ID="EventDate" friendlyname="Event Date" type="string" category="Event" refreshdisplay="false" inputlength="255">
       <Value></Value>
     </Prop>
     <Prop ID="EventId" friendlyname="Event Id" type="string" category="Event" refreshdisplay="false" inputlength="255">
@@ -175,6 +179,9 @@ See the file below for samples and descriptions of the values you may have in th
       <Value></Value>
     </Prop>
 
+    <Prop ID="ConnectionState" friendlyname="Connection State" type="string" category="Status" refreshdisplay="false" inputlength="255" >
+      <Value></Value>
+    </Prop>
 
     <!--"ControlExpression" is used when you want to allow the designer to set the control value with an expression-->
     <Prop ID="ControlExpression" friendlyname="Expression" type="complex" category="General" DesignerSet="SourceCode.Forms.Designers.View.Conditions._showControlCalculation" />

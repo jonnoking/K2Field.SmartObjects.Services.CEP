@@ -262,6 +262,18 @@ namespace K2Field.SmartForms.CEPEvent.CEPEventReceiveControl
             }
         }
 
+        public string ConnectionState
+        {
+            get
+            {
+                return this.Attributes["data-connectionstate"];
+            }
+            set
+            {
+                this.Attributes["data-connectionstate"] = value;
+            }
+        }
+
         #region IDs
         public string ControlID
         {
