@@ -198,7 +198,7 @@ namespace K2Field.SmartObjects.Services.CEP.Sandbox
                         using (var unit = new ApplicationUnit())
                         {
                             Model.EventListenerLog el = new Model.EventListenerLog();
-                            el.Action = "workflow";
+                            el.Action = "K2 Process";
                             el.Origin = "Azure Service Bus";
                             el.EventType = "TestEvent";
                             el.EventSource = "jonnoStream";
@@ -241,7 +241,7 @@ namespace K2Field.SmartObjects.Services.CEP.Sandbox
             {
                 Model.EventListener el = new Model.EventListener();
                 el.DisplayName = "ES Test Event";
-                el.Action = "workflow";
+                el.Action = "K2 Process";
                 el.Origin = "Event Store";
                 el.OriginChannel = "stream";
                 el.EventSource = "jonnoStream";
@@ -251,7 +251,7 @@ namespace K2Field.SmartObjects.Services.CEP.Sandbox
 
                 Model.EventListener el1 = new Model.EventListener();
                 el1.DisplayName = "ES Customer Event";
-                el1.Action = "workflow";
+                el1.Action = "K2 Process";
                 el1.Origin = "Event Store";
                 el1.OriginChannel = "stream";
                 el1.EventSource = "customerStream";
@@ -261,7 +261,7 @@ namespace K2Field.SmartObjects.Services.CEP.Sandbox
 
                 Model.EventListener el2 = new Model.EventListener();
                 el2.DisplayName = "ASB Customer Event";
-                el2.Action = "workflow";
+                el2.Action = "K2 Process";
                 el2.Origin = "Azure Service Bus";
                 el2.OriginChannel = "queue";
                 el2.EventSource = "demoqueue1";

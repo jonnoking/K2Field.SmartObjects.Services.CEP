@@ -148,6 +148,7 @@
     <Compile Include="K2CEPListenerService.Designer.cs">
       <DependentUpon>K2CEPListenerService.cs</DependentUpon>
     </Compile>
+    <Compile Include="K2\K2Utils.cs" />
     <Compile Include="Log\CEPLog.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProjectInstaller.cs">

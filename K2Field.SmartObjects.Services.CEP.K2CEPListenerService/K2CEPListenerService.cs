@@ -127,7 +127,7 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService
                 int pid = 0;
                 if (el.Action.Equals("k2 process", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    pid = StartWorkflow(el, json, resolvedEvent.Event.EventId.ToString());
+                    pid = K2.K2Utils.StartWorkflow(el, json, resolvedEvent.Event.EventId.ToString());
                 }
 
                 Data.EventsData.LogEventAsync(el, json, resolvedEvent.Event.EventId.ToString(), "application/json", pid.ToString());
@@ -140,81 +140,7 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService
             ListenToEventStore();
         }
 
-        public int StartWorkflow(Model.EventListener el, string data, string eventid)
-        {
-            int procid = 0;
-            try
-            {
-                SourceCode.Hosting.Client.BaseAPI.SCConnectionStringBuilder connectionString =
-                new SourceCode.Hosting.Client.BaseAPI.SCConnectionStringBuilder();
- 
-                connectionString.Authenticate = true;
-                connectionString.Host = "localhost";
-                connectionString.Integrated = true;
-                connectionString.IsPrimaryLogin = true;
-                connectionString.Port = 5252;
-                connectionString.UserID = "administrator";
-                connectionString.WindowsDomain = "denallix";
-                connectionString.Password = "K2pass!";
-                connectionString.SecurityLabelName = "K2"; //the default label
 
-                SourceCode.Workflow.Client.Connection k2con = new SourceCode.Workflow.Client.Connection();
-                                
-                k2con.Open("localhost", connectionString.ToString());
- 
-                //create process instance
-                ProcessInstance processInstance = k2con.CreateProcessInstance(el.ProcessName);
-
-                try
-                {
-                    processInstance.DataFields["Event Origin"].Value = el.Origin;
-                }
-                catch { }
-
-                try
-                {
-                    processInstance.DataFields["Event Source"].Value = el.EventSource;
-                }
-                catch { }
-
-                try
-                {
-                    processInstance.DataFields["Event Type"].Value = el.EventType;
-                }
-                catch { }
-
-                try
-                {
-                    processInstance.DataFields["Event Id"].Value = eventid;
-                }
-                catch { }
-
-                try
-                {
-                    processInstance.DataFields["Event Data"].Value = data;
-                }
-                catch { }
-
-                try
-                {
-                    processInstance.DataFields["Event Type Id"].Value = el.Id;
-                }
-                catch { }
-                
-                //set process folio
-                //processInstance.Folio = _processFolio + System.DateTime.Today.ToString();
- 
-                //start the process
-                k2con.StartProcessInstance(processInstance, false);
-
-                procid = processInstance.ID;
-            }
-            catch (Exception ex)
-            {
-                eventLog1.WriteEntry("Start Workflow failed: " + el.Origin + " - " + el.EventSource + " - " + el.EventType + " - " + eventid, EventLogEntryType.Error);
-            }
-            return procid;
-        }
 
 
 
@@ -244,7 +170,7 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService
                             int pid = 0;
                             if (el.Action.Equals("k2 process", StringComparison.CurrentCultureIgnoreCase))
                             {
-                                pid = StartWorkflow(el, json, message.MessageId);
+                                pid = K2.K2Utils.StartWorkflow(el, json, message.MessageId);
                             }
 
                             string ct = string.Empty;

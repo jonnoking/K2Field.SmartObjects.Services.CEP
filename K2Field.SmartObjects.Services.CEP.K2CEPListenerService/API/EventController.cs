@@ -24,6 +24,12 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService.API
                     ).FirstOrDefault();
                 if (el != null)
                 {
+                    int pid = 0;
+                    if (el.Action.Equals("k2 process", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        pid = K2.K2Utils.StartWorkflow(el, eventdata, "");
+                    }
+
                     ell = new Model.EventListenerLog()
                     {
                         Origin = el.Origin,
@@ -31,6 +37,8 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService.API
                         Action = el.Action,
                         EventSource = el.EventSource,
                         EventType = el.EventType,
+                        ProcessId = pid.ToString(),
+                        ProcessName = el.ProcessName,
                         EventData = eventdata,
                         EventDataType = eventdatatype,
                         EventDate = DateTime.Now,
