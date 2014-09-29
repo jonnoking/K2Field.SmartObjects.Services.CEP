@@ -2813,6 +2813,9 @@
     $.signalR.version = "2.1.2";
 }(window.jQuery));
 
+
+
+
 // generated javascript for CEPHub - Jonno
 /*!
  * ASP.NET SignalR JavaScript Library v2.1.2
@@ -2824,6 +2827,8 @@
  *
  */
 
+/// <reference path="..\..\SignalR.Client.JS\Scripts\jquery-1.6.4.js" />
+/// <reference path="jquery.signalR.js" />
 (function ($, window, undefined) {
     /// <param name="$" type="jQuery" />
     "use strict";
@@ -2895,6 +2900,10 @@
         proxies['cEPHub'] = this.createHubProxy('cEPHub');
         proxies['cEPHub'].client = {};
         proxies['cEPHub'].server = {
+            joinGroup: function (eventtype) {
+                return proxies['cEPHub'].invoke.apply(proxies['cEPHub'], $.merge(["JoinGroup"], $.makeArray(arguments)));
+            },
+
             send: function (name, message, msgdatetime) {
                 return proxies['cEPHub'].invoke.apply(proxies['cEPHub'], $.merge(["Send"], $.makeArray(arguments)));
             },
@@ -2911,7 +2920,6 @@
     $.extend(signalR, signalR.hub.createHubProxies());
 
 }(window.jQuery, window));
-
 
 
 // smartforms control below
@@ -3094,9 +3102,10 @@ $(document).ready(function () {
         // event has an event type
         if (ev.hasOwnProperty("EventType"))
         {
+            // REMOVED CLIENT-SIDE FILTER CHECK - now achieved through SignalR groups
             // event type found in filter
-            if (fltr.trim().length == 0 || $.inArray(ev["EventType"].toLowerCase(), fa) > 0)
-            {
+            //if (fltr.trim().length == 0 || $.inArray(ev["EventType"].toLowerCase(), fa) > -1)
+            //{
                 // populate control
 
                 if (ev.hasOwnProperty("Id")) {
@@ -3142,9 +3151,15 @@ $(document).ready(function () {
 
                 //rasie event
                 raiseEvent(id, 'Control', 'EventReceived');
-            }
+            //}
         }       
     };
+
+    function joinGroup() {
+        if ($("#" + id).attr("data-eventfilter") != undefined) {
+            cep.server.joinGroup($("#" + id).attr("data-eventfilter").toLowerCase());
+        }
+    }
 
     cep.client.send = function (name, message, msgdatetime) {
         $("#" + id).attr("data-eventtype", name);
@@ -3154,6 +3169,18 @@ $(document).ready(function () {
 
     $.connection.hub.start().done(function () {
         console.log("SignalR CEP Hub started");
+        joinGroup();
+    });
+
+    $.connection.hub.reconnected(function () {
+        tryingToReconnect = false;
+        joinGroup();
+    });
+
+    $.connection.hub.disconnected(function () {
+        setTimeout(function () {
+            $.connection.hub.start();
+        }, 5000); // Restart connection after 5 seconds.
     });
 
     $.connection.hub.stateChanged(function (change) {     

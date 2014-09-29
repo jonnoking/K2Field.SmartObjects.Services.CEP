@@ -18,6 +18,7 @@ using System.Net;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService
 {
@@ -30,14 +31,16 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService
         public K2CEPListenerService()
         {
             InitializeComponent();
-            eventLog1 = new System.Diagnostics.EventLog();
-            if (!System.Diagnostics.EventLog.SourceExists("K2CEPListener"))
-            {
-                System.Diagnostics.EventLog.CreateEventSource(
-                    "K2CEPListener", "K2CEPListenerLog");
-            }
-            eventLog1.Source = "K2CEPListener";
-            eventLog1.Log = "K2CEPListenerLog";
+            //eventLog1 = new System.Diagnostics.EventLog();
+            //if (!System.Diagnostics.EventLog.SourceExists("K2CEPListener"))
+            //{
+            //    System.Diagnostics.EventLog.CreateEventSource(
+            //        "K2CEPListener", "K2CEPListenerLog");
+            //}
+            //eventLog1.Source = "K2CEPListener";
+            //eventLog1.Log = "K2CEPListenerLog";
+
+            eventLog1 = Log.CEPLog.GetLog();
 
             this.AutoLog = false;
         }
@@ -47,11 +50,12 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService
         private List<Model.EventListener> events = new List<Model.EventListener>();
 
         IDisposable SignalRServer = null;
+        IDisposable WebApiServer = null;
 
         protected override void OnStart(string[] args)
         {
             eventLog1.WriteEntry("Started...");
-            GetEvents();
+            events = Data.EventsData.GetEvents();
             ListenToEventStore();
             ListenToAzureAsync();
 
@@ -61,33 +65,15 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService
             // See http://msdn.microsoft.com/en-us/library/system.net.httplistener.aspx 
             // for more information.
             string url = "http://localhost:8181";
-            SignalRServer = WebApp.Start<Startup>(url);
+            SignalRServer = WebApp.Start<Start.Startup>(url);
             eventLog1.WriteEntry("CEP SignalR server running on " + url, EventLogEntryType.Information);
             //using (WebApp.Start(url))
             //{
                 
             //}
+
         }
-
-
-
-        private void GetEvents()
-        {
-            try
-            {
-                // Get events to listen for
-                using (Data.ApplicationUnit unit = new Data.ApplicationUnit())
-                {
-                    //events = unit.EventListeners.All(p => p.Origin.Equals("event store", StringComparison.CurrentCultureIgnoreCase)).ToList<Model.EventListener>();
-                    events = unit.EventListeners.All().ToList();
-                    eventLog1.WriteEntry("Events #: " + events.Count, EventLogEntryType.Information);
-                }
-            }
-            catch (Exception ex)
-            {
-                eventLog1.WriteEntry("Error getting Events from database. \n\n " + ex.Message, EventLogEntryType.Error);
-            }
-        }
+       
 
         private async Task<bool> ConnectToEventStore()
         {
@@ -139,12 +125,12 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService
                 }
 
                 int pid = 0;
-                if (el.Action.Equals("workflow", StringComparison.CurrentCultureIgnoreCase))
+                if (el.Action.Equals("k2 process", StringComparison.CurrentCultureIgnoreCase))
                 {
                     pid = StartWorkflow(el, json, resolvedEvent.Event.EventId.ToString());
                 }
 
-                LogEventAsync(el, json, resolvedEvent.Event.EventId.ToString(), pid.ToString(), "success");
+                Data.EventsData.LogEventAsync(el, json, resolvedEvent.Event.EventId.ToString(), "application/json", pid.ToString());
                    
            }
         }
@@ -230,46 +216,7 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService
             return procid;
         }
 
-        public void PostEventNotification(Model.EventListenerLog ev)
-        {
-            GlobalHost.ConnectionManager.GetHubContext<CEPHub>().Clients.All.sendEvent(ev);
-                
-        }
 
-        public async Task LogEventAsync(Model.EventListener el, string data, string eventid, string processinstanceid, string status)
-        {
-            await Task.Run(() =>
-            {
-                try
-                {
-                    using (var unit = new Data.ApplicationUnit())
-                    {
-                        Model.EventListenerLog ell = new Model.EventListenerLog();
-                        ell.Action = el.Action;
-                        ell.Origin = el.Origin;
-                        ell.EventType = el.EventType;
-                        ell.EventSource = el.EventSource;
-                        ell.EventDisplayName = el.EventDisplayName;
-                        ell.ProcessName = el.ProcessName;
-                        ell.EventData = data;
-                        ell.EventId = eventid;
-                        ell.ProcessId = processinstanceid;
-                        ell.Status = status;
-                        ell.EventDate = DateTime.Now;
-                        ell.EventListenerId = el.Id;
-
-                        unit.EventListenerLogs.Add(ell);
-                        unit.SaveChanges();
-
-                        PostEventNotification(ell);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    eventLog1.WriteEntry("Log Event failed: " + el.Origin + " - " + el.EventSource + " - " + el.EventType + " - " + eventid, EventLogEntryType.Error);
-                }
-            });            
-        }
 
         public async Task ListenToAzureAsync()
         {
@@ -284,7 +231,7 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService
                     BrokeredMessage message = Client.Receive();
                     if (message != null)
                     {
-                        Model.EventListener el = events.Where(p => p.EventType.Equals(message.Label, StringComparison.CurrentCultureIgnoreCase) && p.Origin.Equals("azure", StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
+                        Model.EventListener el = events.Where(p => p.EventType.Equals(message.Label, StringComparison.CurrentCultureIgnoreCase) && p.Origin.Equals("azure service bus", StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
                         if (el != null)
                         {
                             string json = string.Empty;
@@ -295,12 +242,22 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService
                             catch { }
 
                             int pid = 0;
-                            if (el.Action.Equals("workflow", StringComparison.CurrentCultureIgnoreCase))
+                            if (el.Action.Equals("k2 process", StringComparison.CurrentCultureIgnoreCase))
                             {
                                 pid = StartWorkflow(el, json, message.MessageId);
                             }
 
-                            LogEventAsync(el, json, message.MessageId, pid.ToString(), "success");
+                            string ct = string.Empty;
+                            if (!string.IsNullOrWhiteSpace(message.ContentType))
+                            {
+                                ct = message.ContentType;
+                            }
+                            else
+                            {
+                                ct = "application/json";
+                            }
+
+                            Data.EventsData.LogEventAsync(el, json, message.MessageId, ct, pid.ToString());
                             
                             message.Complete();
                         }
@@ -336,24 +293,47 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService
 
     }
 
-    class Startup
-    {
-        public void Configuration(IAppBuilder app)
-        {
-            app.UseCors(CorsOptions.AllowAll);
-            app.MapSignalR();
-        }
-    }
-    public class CEPHub : Hub
-    {
-        public void Send(string name, string message, DateTime msgdatetime)
-        {
-            Clients.All.addMessage(name, message, msgdatetime);            
-        }
+    //class Startup
+    //{
+    //    public void Configuration(IAppBuilder app)
+    //    {
+    //        app.UseCors(CorsOptions.AllowAll);
+    //        app.MapSignalR();
 
-        public void SendEvent(Model.EventListenerLog ev)
-        {
-            Clients.All.sendEvent(ev);
-        }
-    }
+    //        HttpConfiguration config = new HttpConfiguration();
+    //        config.Routes.MapHttpRoute(
+    //            name: "DefaultApi",
+    //            routeTemplate: "api/{controller}/{id}",
+    //            defaults: new { id = RouteParameter.Optional }
+    //        );
+
+    //        app.UseWebApi(config); 
+    //    }
+    //}
+
+
+    // To Do
+    /* 
+     *** CORE ***
+     * Modular inferface driven services & actions e.g. start wf, log to db
+     * Externalized connections - event store, azure, db, signalr, k2
+     * Refresh event read from DB - on signalr event? on timer?
+     * Log event read refresh datetime
+     * Add webapi to services - GET interface to post an event - generic? per queue
+     * 
+     *** Azure ***
+     * listener per registered event
+     * listeners for queue, topic, subscription
+     * 
+     *** Event Store ***
+     * 
+     * 
+     *** Splunk ***
+     * Implement
+     * 
+     *** Virtual Event ***
+     * Signalr based event fired from SF or WF
+     * 
+     * 
+     */
 }

@@ -1,0 +1,60 @@
+﻿using System;
+using System.Web;
+using System.Web.Http;
+using System.Web.Http.Cors;
+using System.Linq;
+using Microsoft.AspNet.SignalR;
+
+namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService.API
+{
+    public class EventController : ApiController
+    {
+        [EnableCors(origins: "*", headers: "*", methods: "*", SupportsCredentials = true)]
+        public IHttpActionResult Get([FromUri]string origin, [FromUri]string originchannel, [FromUri]string eventsource, [FromUri]string eventtype, [FromUri]string eventdata, [FromUri]string eventdatatype="application/json")
+        {
+            Model.EventListenerLog ell = new Model.EventListenerLog();
+            try
+            {
+                // find event
+                Model.EventListener el = Data.EventsData.GetEvents()
+                    .Where(p => p.Origin.Equals(origin, StringComparison.CurrentCultureIgnoreCase)
+                    && p.OriginChannel.Equals(originchannel, StringComparison.CurrentCultureIgnoreCase)
+                    && p.EventSource.Equals(eventsource, StringComparison.CurrentCultureIgnoreCase)
+                    && p.EventType.Equals(eventtype, StringComparison.CurrentCultureIgnoreCase)
+                    ).FirstOrDefault();
+                if (el != null)
+                {
+                    ell = new Model.EventListenerLog()
+                    {
+                        Origin = el.Origin,
+                        OriginChannel = el.OriginChannel,
+                        Action = el.Action,
+                        EventSource = el.EventSource,
+                        EventType = el.EventType,
+                        EventData = eventdata,
+                        EventDataType = eventdatatype,
+                        EventDate = DateTime.Now,
+                        EventListenerId = el.Id,
+                    };
+
+                    using (CEP.Data.ApplicationUnit unit = new CEP.Data.ApplicationUnit())
+                    {
+                        unit.EventListenerLogs.Add(ell);
+                        unit.SaveChanges();
+                    }
+                    //GlobalHost.ConnectionManager.GetHubContext<Hubs.CEPHub>().Clients.Group(eventtype.ToLower()).sendEvent(ell);
+                    Push.EventPush.PostEventNotificationToGroups(ell);
+                    return (Ok(ell));
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        } 
+    }
+}

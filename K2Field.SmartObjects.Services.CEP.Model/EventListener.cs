@@ -11,13 +11,11 @@ namespace K2Field.SmartObjects.Services.CEP.Model
         public string Name { get; set; }
         public string DisplayName { get; set; }
         public string Origin { get; set; }
-        public string EventDisplayName { get; set; }
+        public string OriginChannel { get; set; }
         public string EventType { get; set; }
         public string EventSource { get; set; }
         public string Action { get; set; }
         public string ProcessName { get; set; }
-        public string IdDataField { get; set; }
-        public string DataDataField { get; set; }
         public bool IsActive { get; set; }
 
 

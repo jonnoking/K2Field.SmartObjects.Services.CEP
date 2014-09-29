@@ -1,6 +1,5 @@
 ﻿REM
 echo this batch file registers the custom control assembly with K2 smartforms
-pause
 iisreset
 xcopy "K2Field.SmartForms.CEPEvent.dll" "C:\Program Files (x86)\K2 blackpearl\K2 SmartForms Designer\bin\" /y /r
 xcopy "K2Field.SmartForms.CEPEvent.dll" "C:\Program Files (x86)\K2 blackpearl\K2 SmartForms Runtime\bin\" /y /r

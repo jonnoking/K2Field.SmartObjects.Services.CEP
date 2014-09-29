@@ -27,11 +27,11 @@ namespace K2Field.SmartObjects.Services.CEP.Sandbox
         {
             InitializeComponent();
 
-            aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+            //aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
 
-            // Set the Interval to 2 seconds (2000 milliseconds).
-            aTimer.Interval = 10000;
-            aTimer.Enabled = true;
+            //// Set the Interval to 2 seconds (2000 milliseconds).
+            //aTimer.Interval = 10000;
+            //aTimer.Enabled = true;
 
 
         }
@@ -202,10 +202,9 @@ namespace K2Field.SmartObjects.Services.CEP.Sandbox
                             el.Origin = "Azure Service Bus";
                             el.EventType = "TestEvent";
                             el.EventSource = "jonnoStream";
-                            el.EventDisplayName = "Test Event";
+                            
                             el.ProcessName = @"CEP\CustomerReview";
                             el.EventData = message.MessageId + " - " + message.GetBody<string>();
-                            el.Status = "success";
                             el.EventDate = DateTime.Now;
 
                             unit.EventListenerLogs.Add(el);
@@ -241,36 +240,33 @@ namespace K2Field.SmartObjects.Services.CEP.Sandbox
             using (var unit = new ApplicationUnit())
             {
                 Model.EventListener el = new Model.EventListener();
+                el.DisplayName = "ES Test Event";
                 el.Action = "workflow";
                 el.Origin = "Event Store";
-                el.EventType = "TestEvent";
+                el.OriginChannel = "stream";
                 el.EventSource = "jonnoStream";
-                el.EventDisplayName = "Test Event";
+                el.EventType = "TestEvent";
                 el.ProcessName = @"CEP\CustomerReview";
-                el.DataDataField = "Event Data";
-                el.IdDataField = "Event Id";
                 el.IsActive = true;
 
                 Model.EventListener el1 = new Model.EventListener();
+                el1.DisplayName = "ES Customer Event";
                 el1.Action = "workflow";
                 el1.Origin = "Event Store";
-                el1.EventType = "customerevent";
+                el1.OriginChannel = "stream";
                 el1.EventSource = "customerStream";
-                el1.EventDisplayName = "Customer Alert";
+                el1.EventType = "customerevent";
                 el1.ProcessName = @"CEP\CustomerReview";
-                el1.DataDataField = "Event Data";
-                el1.IdDataField = "Event Id";
                 el1.IsActive = true;
 
                 Model.EventListener el2 = new Model.EventListener();
+                el2.DisplayName = "ASB Customer Event";
                 el2.Action = "workflow";
-                el2.Origin = "Azure";
+                el2.Origin = "Azure Service Bus";
+                el2.OriginChannel = "queue";
+                el2.EventSource = "demoqueue1";
                 el2.EventType = "customerevent";
-                el2.EventSource = "customerStream";
-                el2.EventDisplayName = "Customer Alert";
                 el2.ProcessName = @"CEP\CustomerReview";
-                el2.DataDataField = "Event Data";
-                el2.IdDataField = "Event Id";
                 el2.IsActive = true;
 
                 unit.EventListeners.Add(el);
