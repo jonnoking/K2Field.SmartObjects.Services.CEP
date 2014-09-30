@@ -9,6 +9,8 @@ namespace K2Field.SmartObjects.Services.CEP.Model
     public class EventListenerLog
     {
         public Guid Id { get; set; }
+        public string Name { get; set; }
+        public string DisplayName { get; set; }
         public string Origin { get; set; }
         public string OriginChannel { get; set; }
         public string EventSource { get; set; }

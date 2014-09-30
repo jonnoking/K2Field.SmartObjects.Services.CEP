@@ -8,8 +8,23 @@ You could also specify a different class and set the class in the .cs file like 
 	/* e.g. background-color: inherit; */
 }
 
+.jktoast-title {
+     font-weight: bold;
+}
 
+.jktoast-message {
+    -ms-word-wrap: break-word;
+    word-wrap: break-word;
+}
 
+.jktoast-message a,
+.jktoast-message label {
+  color: #ffffff;
+}
+.jktoast-message a:hover {
+  color: #cccccc;
+  text-decoration: none;
+}
 
 
 /*
@@ -24,10 +39,12 @@ You could also specify a different class and set the class in the .cs file like 
  */
 .toast-title {
   font-weight: bold;
+  font-size:20px;
 }
 .toast-message {
   -ms-word-wrap: break-word;
   word-wrap: break-word;
+  font-size:20px;
 }
 .toast-message a,
 .toast-message label {

@@ -145,10 +145,16 @@ See the file below for samples and descriptions of the values you may have in th
     <Prop ID="EId" friendlyname="Event Instance Id" type="string" category="Event" refreshdisplay="false" inputlength="4000">
       <Value></Value>
     </Prop>
+    <Prop ID="Name" friendlyname="Name" type="string" category="Event" refreshdisplay="false" inputlength="255">
+      <Value></Value>
+    </Prop>
+    <Prop ID="Display Name" friendlyname="Display Name" type="string" category="Event" refreshdisplay="false" inputlength="255">
+      <Value></Value>
+    </Prop>
     <Prop ID="Origin" friendlyname="Origin" type="string" category="Event" refreshdisplay="false" inputlength="255">
       <Value></Value>
     </Prop>
-    <Prop ID="EventDisplayName" friendlyname="Event Display Name" type="string" category="Event" refreshdisplay="false" inputlength="255">
+    <Prop ID="OriginChannel" friendlyname="Origin Channel" type="string" category="Event" refreshdisplay="false" inputlength="255">
       <Value></Value>
     </Prop>
     <Prop ID="EventType" friendlyname="Event Type" type="string" category="Event" refreshdisplay="false" inputlength="255">
@@ -166,13 +172,13 @@ See the file below for samples and descriptions of the values you may have in th
     <Prop ID="EventData" friendlyname="Event Data" type="string" category="Event" refreshdisplay="false" inputlength="4000">
       <Value></Value>
     </Prop>
+    <Prop ID="EventDataType" friendlyname="Event Data Type" type="string" category="Event" refreshdisplay="false" inputlength="255">
+      <Value></Value>
+    </Prop>
     <Prop ID="EventDate" friendlyname="Event Date" type="string" category="Event" refreshdisplay="false" inputlength="255">
       <Value></Value>
     </Prop>
     <Prop ID="EventId" friendlyname="Event Id" type="string" category="Event" refreshdisplay="false" inputlength="255">
-      <Value></Value>
-    </Prop>
-    <Prop ID="Status" friendlyname="Status" type="string" category="Event" refreshdisplay="false" inputlength="255">
       <Value></Value>
     </Prop>
     <Prop ID="EventListenerId" friendlyname="Event Listener Id" type="string" category="Event" refreshdisplay="false" inputlength="255">

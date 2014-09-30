@@ -241,6 +241,7 @@ namespace K2Field.SmartObjects.Services.CEP.Sandbox
             {
                 Model.EventListener el = new Model.EventListener();
                 el.DisplayName = "ES Test Event";
+                el.Name = "estestevent";
                 el.Action = "K2 Process";
                 el.Origin = "Event Store";
                 el.OriginChannel = "stream";
@@ -251,6 +252,7 @@ namespace K2Field.SmartObjects.Services.CEP.Sandbox
 
                 Model.EventListener el1 = new Model.EventListener();
                 el1.DisplayName = "ES Customer Event";
+                el1.Name = "escustomerevent";
                 el1.Action = "K2 Process";
                 el1.Origin = "Event Store";
                 el1.OriginChannel = "stream";
@@ -261,6 +263,7 @@ namespace K2Field.SmartObjects.Services.CEP.Sandbox
 
                 Model.EventListener el2 = new Model.EventListener();
                 el2.DisplayName = "ASB Customer Event";
+                el2.Name = "asbcustomerevent";
                 el2.Action = "K2 Process";
                 el2.Origin = "Azure Service Bus";
                 el2.OriginChannel = "queue";

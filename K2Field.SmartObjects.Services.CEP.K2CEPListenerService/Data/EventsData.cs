@@ -20,6 +20,8 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService.Data
                     using (var unit = new CEP.Data.ApplicationUnit())
                     {
                         Model.EventListenerLog ell = new Model.EventListenerLog();
+                        ell.DisplayName = el.DisplayName;
+                        ell.Name = el.Name;
                         ell.Action = el.Action;
                         ell.Origin = el.Origin;
                         ell.OriginChannel = el.OriginChannel;

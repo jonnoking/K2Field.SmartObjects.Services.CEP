@@ -230,6 +230,7 @@
                 if (map.title) {
                     $titleElement.append(map.title).addClass(options.titleClass);
                     $toastElement.append($titleElement);
+
                 }
 
                 if (map.message) {
@@ -515,7 +516,7 @@ var $toastlast;
                      * 
                      */
 
-                    var messagetype = "";
+                    var messagetype = "toast-top-full-width";
                     var title = "";
                     var message = "";
                     var closebutton = true;
@@ -552,7 +553,9 @@ var $toastlast;
                         "showEasing": "swing",
                         "hideEasing": "linear",
                         "showMethod": "fadeIn",
-                        "hideMethod": "fadeOut"
+                        "hideMethod": "fadeOut",
+                        "titleClass": "toast-title",
+                        "messageClass": "toast-message"
                     };
 
                     var $toast = toastr[messagetype](message, title);

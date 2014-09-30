@@ -3056,17 +3056,19 @@
                 case "clearevent":
                     instance.value = "";
                     $(instance).attr("data-eid", "");
+                    $(instance).attr("data-name", "");
+                    $(instance).attr("data-displayname", "");
                     $(instance).attr("data-origin", "");
-                    $(instance).attr("data-eventdisplayname", "");
+                    $(instance).attr("data-originchannel", "");
                     $(instance).attr("data-eventtype", "");
                     $(instance).attr("data-eventsource", "");
                     $(instance).attr("data-action", "");
                     $(instance).attr("data-processname", "");
                     $(instance).attr("data-processid", "");
                     $(instance).attr("data-eventdata", "");
+                    $(instance).attr("data-eventdatatype", "");
                     $(instance).attr("data-eventdate", "");
                     $(instance).attr("data-eventid", "");
-                    $(instance).attr("data-status", "");
                     $(instance).attr("data-eventlistenerid", "");
 
                     raiseEvent(objInfo.CurrentControlID, 'Control', 'EventCleared');
@@ -3111,11 +3113,17 @@ $(document).ready(function () {
                 if (ev.hasOwnProperty("Id")) {
                     $("#" + id).attr("data-eid", ev.Id);
                 }
+                if (ev.hasOwnProperty("Name")) {
+                    $("#" + id).attr("data-name", ev.Origin);
+                }
+                if (ev.hasOwnProperty("DisplayName")) {
+                    $("#" + id).attr("data-displayname", ev.Origin);
+                }
                 if (ev.hasOwnProperty("Origin")) {
                     $("#" + id).attr("data-origin", ev.Origin);
                 }
-                if (ev.hasOwnProperty("EventDisplayName")) {
-                    $("#" + id).attr("data-eventdisplayname", ev.EventDisplayName);
+                if (ev.hasOwnProperty("OriginChannel")) {
+                    $("#" + id).attr("data-originchannel", ev.EventDisplayName);
                 }
                 if (ev.hasOwnProperty("EventType")) {
                     $("#" + id).attr("data-eventtype", ev.EventType);
@@ -3136,14 +3144,14 @@ $(document).ready(function () {
                     $("#" + id).attr("data-eventdata", ev.EventData);
                     $("#" + id).attr("value", ev.EventData);
                 }
+                if (ev.hasOwnProperty("EventDataType")) {
+                    $("#" + id).attr("data-eventdatatype", ev.EventData);
+                }
                 if (ev.hasOwnProperty("EventDate")) {
                     $("#" + id).attr("data-eventdate", ev.EventDate);
                 }
                 if (ev.hasOwnProperty("EventId")) {
                     $("#" + id).attr("data-eventid", ev.EventId);
-                }
-                if (ev.hasOwnProperty("Status")) {
-                    $("#" + id).attr("data-status", ev.Status);
                 }
                 if (ev.hasOwnProperty("EventListenerId")) {
                     $("#" + id).attr("data-eventlistenerid", ev.EventListenerId);

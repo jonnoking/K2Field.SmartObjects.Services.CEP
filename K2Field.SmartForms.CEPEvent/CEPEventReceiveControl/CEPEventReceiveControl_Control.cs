@@ -140,15 +140,15 @@ namespace K2Field.SmartForms.CEPEvent.CEPEventReceiveControl
             }
         }
 
-        public string EventDisplayName
+        public string OriginChannel
         {
             get
             {
-                return this.Attributes["data-eventdisplayname"];
+                return this.Attributes["data-originchannel"];
             }
             set
             {
-                this.Attributes["data-eventdisplayname"] = value;
+                this.Attributes["data-originchannel"] = value;
             }
         }
         public string EventType
@@ -215,6 +215,17 @@ namespace K2Field.SmartForms.CEPEvent.CEPEventReceiveControl
             set
             {
                 this.Attributes["data-eventdata"] = value;
+            }
+        }
+        public string EventDataType
+        {
+            get
+            {
+                return this.Attributes["data-eventdatatype"];
+            }
+            set
+            {
+                this.Attributes["data-eventdatatype"] = value;
             }
         }
         public string EventDate
