@@ -23,7 +23,7 @@ See the file below for samples and descriptions of the values you may have in th
 
   <!--<Group> is the name of the toolbox group where the control can be found at design time
 	-->
-  <Group>CEP Messaging</Group>
+  <Group>Notifications</Group>
 
   <!--<Name> is the short name for the control type that is implemented, platform independent.
 	It is the name of the control type stored in Form and View definitions.
@@ -34,7 +34,7 @@ See the file below for samples and descriptions of the values you may have in th
   <!--<DisplayName> is shown in the toolbox's "Controls" tab, and is the name used when creating control instance names.
 	Example: CEPEventReceiveControl_Definition, CEPEventReceiveControl_Definition1, CEPEventReceiveControl_Definition2 etc   
 	-->
-  <DisplayName>CEP Event Receive</DisplayName>
+  <DisplayName>CEP Event Receiver</DisplayName>
 
   <!--<FullName> is used to load and instantiate the control. It tells smartforms where to find the control
 	Format: {TypeFullName},{AssemblyName(without .dll extension)}

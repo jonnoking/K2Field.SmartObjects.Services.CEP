@@ -34,7 +34,7 @@ See the file below for samples and descriptions of the values you may have in th
   <!--<DisplayName> is shown in the toolbox's "Controls" tab, and is the name used when creating control instance names.
 	Example: ToastrNotifyControl_Definition, ToastrNotifyControl_Definition1, ToastrNotifyControl_Definition2 etc   
 	-->
-  <DisplayName>Toastr Notication</DisplayName>
+  <DisplayName>Toast Notification</DisplayName>
 
   <!--<FullName> is used to load and instantiate the control. It tells smartforms where to find the control
 	Format: {TypeFullName},{AssemblyName(without .dll extension)}
