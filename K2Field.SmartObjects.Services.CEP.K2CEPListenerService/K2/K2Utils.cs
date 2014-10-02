@@ -77,9 +77,9 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService.K2
                 //processInstance.Folio = _processFolio + System.DateTime.Today.ToString();
 
                 //start the process
-                k2con.StartProcessInstance(processInstance, false);
+                //k2con.StartProcessInstance(processInstance, false);
 
-                procid = processInstance.ID;
+                //procid = processInstance.ID;
             }
             catch (Exception ex)
             {

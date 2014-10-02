@@ -39,7 +39,6 @@ You could also specify a different class and set the class in the .cs file like 
  */
 .toast-title {
   font-weight: bold;
-  font-size:20px;
 }
 .toast-message {
   -ms-word-wrap: break-word;

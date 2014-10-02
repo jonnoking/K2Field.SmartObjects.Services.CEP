@@ -229,12 +229,14 @@
 
                 if (map.title) {
                     $titleElement.append(map.title).addClass(options.titleClass);
+                    $titleElement.attr("style", "font-size:16px;font-wieght:bold");
                     $toastElement.append($titleElement);
 
                 }
 
                 if (map.message) {
                     $messageElement.append(map.message).addClass(options.messageClass);
+                    $messageElement.attr("style", "font-size:14px;font-weight:bold");
                     $toastElement.append($messageElement);
                 }
 
