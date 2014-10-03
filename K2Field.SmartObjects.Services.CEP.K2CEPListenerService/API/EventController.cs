@@ -4,6 +4,7 @@ using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Linq;
 using Microsoft.AspNet.SignalR;
+using System.Collections.Generic;
 
 namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService.API
 {
@@ -16,11 +17,16 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService.API
             try
             {
                 // find event
-                Model.EventListener el = Data.EventsData.GetEvents()
-                    .Where(p => p.Origin.Equals(origin, StringComparison.CurrentCultureIgnoreCase)
-                    && p.OriginChannel.Equals(originchannel, StringComparison.CurrentCultureIgnoreCase)
-                    && p.EventSource.Equals(eventsource, StringComparison.CurrentCultureIgnoreCase)
-                    && p.EventType.Equals(eventtype, StringComparison.CurrentCultureIgnoreCase)
+                Model.EventListener el = null;
+                List<Model.EventListener> lel = Data.EventsData.GetEvents().ToList<Model.EventListener>();
+
+                //el = lel.Where(p => p.Origin.Equals(origin, StringComparison.CurrentCultureIgnoreCase)
+                //    && p.OriginChannel.Equals(originchannel, StringComparison.CurrentCultureIgnoreCase)
+                //    && p.EventSource.Equals(eventsource, StringComparison.CurrentCultureIgnoreCase)
+                //    && p.EventType.Equals(eventtype, StringComparison.CurrentCultureIgnoreCase)
+                //    ).FirstOrDefault();
+
+                el = lel.Where(p => p.EventType.Equals(eventtype, StringComparison.CurrentCultureIgnoreCase)
                     ).FirstOrDefault();
                 if (el != null)
                 {

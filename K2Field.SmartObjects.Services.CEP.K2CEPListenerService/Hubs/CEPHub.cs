@@ -19,7 +19,7 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService.Hubs
         {
             Clients.All.sendEvent(ev);
         }
-        public Task JoinGroup(string eventtype)
+        public void JoinGroup(string eventtype)
         {
             string[] g;
             if (eventtype.Contains("|"))
@@ -32,7 +32,7 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService.Hubs
                 }
             }
 
-            return Groups.Add(Context.ConnectionId, eventtype.ToLower());
+            //return Groups.Add(Context.ConnectionId, eventtype.ToLower());
         }
     }
 

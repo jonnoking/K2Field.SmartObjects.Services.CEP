@@ -13,7 +13,8 @@ namespace K2Field.SmartObjects.Services.CEP.K2CEPListenerService.Push
 
         public static void PostEventNotificationToGroups(Model.EventListenerLog ev)
         {
-            GlobalHost.ConnectionManager.GetHubContext<Hubs.CEPHub>().Clients.Group(ev.EventType.ToLower()).sendEvent(ev);
+            //GlobalHost.ConnectionManager.GetHubContext<Hubs.CEPHub>().Clients.Group(ev.EventType.ToLower()).sendEvent(ev);
+            GlobalHost.ConnectionManager.GetHubContext<Hubs.CEPHub>().Clients.All.sendEvent(ev);
         }
         public static void PostEventNotificationToAll(Model.EventListenerLog ev)
         {
