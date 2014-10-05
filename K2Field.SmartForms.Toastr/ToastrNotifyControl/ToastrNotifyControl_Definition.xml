@@ -175,13 +175,24 @@ See the file below for samples and descriptions of the values you may have in th
     
     <Prop ID="Message" friendlyname="Message" type="string" category="Configuration" refreshdisplay="false" inputlength="4000">
       <Value></Value>
-    </Prop>
+    </Prop> -->    
     <Prop ID="CloseButton" friendlyname="Close Button" type="bool" category="Configuration" refreshdisplay="false" inputlength="255">
-      <Value></Value>
+      <Value>true</Value>
     </Prop>
-    <Prop ID="Position" friendlyname="Position" type="string" category="Configuration" refreshdisplay="false" inputlength="255">
-      <Value></Value>
-    </Prop>-->
+   <Prop ID="Type" friendlyname="Type" type="drop" category="Configuration" refreshdisplay="false" inputlength="100" >
+      <Value>Info|Error|Warning|Success</Value>
+      <!--<Value>Error</Value>
+      <Value>Warning</Value>
+      <Value>Success</Value>-->
+    </Prop> 
+    <Prop ID="Position" friendlyname="Position" type="drop" category="Configuration" refreshdisplay="false" inputlength="255">
+      <Value>toast-top-right|toast-bottom-right|toast-bottom-left|toast-top-right|toat-top-full-width|toast-bottom-full-width</Value>
+      <!--<Value>toast-bottom-right</Value>
+      <Value>toast-bottom-left</Value>
+      <Value>toast-top-left</Value>
+      <Value>toast-top-full-width</Value>
+      <Value>toast-bottom-full-width</Value>-->
+    </Prop>
     
 
     <!--"ControlExpression" is used when you want to allow the designer to set the control value with an expression-->

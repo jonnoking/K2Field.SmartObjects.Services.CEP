@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.btnInit = new System.Windows.Forms.Button();
+            this.lbLog = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
             // btnInit
@@ -41,11 +42,20 @@
             this.btnInit.UseVisualStyleBackColor = true;
             this.btnInit.Click += new System.EventHandler(this.btnInit_Click);
             // 
+            // lbLog
+            // 
+            this.lbLog.FormattingEnabled = true;
+            this.lbLog.Location = new System.Drawing.Point(12, 86);
+            this.lbLog.Name = "lbLog";
+            this.lbLog.Size = new System.Drawing.Size(260, 277);
+            this.lbLog.TabIndex = 1;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.ClientSize = new System.Drawing.Size(284, 381);
+            this.Controls.Add(this.lbLog);
             this.Controls.Add(this.btnInit);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -56,6 +66,7 @@
         #endregion
 
         private System.Windows.Forms.Button btnInit;
+        private System.Windows.Forms.ListBox lbLog;
     }
 }
 

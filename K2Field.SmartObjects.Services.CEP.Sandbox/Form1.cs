@@ -13,6 +13,7 @@ using System.Data.Entity;
 using System.Drawing;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -57,10 +58,93 @@ namespace K2Field.SmartObjects.Services.CEP.Sandbox
 
         private void btnInit_Click(object sender, EventArgs e)
         {
-            // will reset database
-            Database.SetInitializer(new DropCreateDatabaseAlways<Data.CEPListenerContext>());
+            List<ListenerInterface.IEventListener> listeners = new List<ListenerInterface.IEventListener>();
 
-            CreateDatabase();
+            //Type[] types = this.GetType().Assembly.GetTypes();
+
+            using (Data.ApplicationUnit unit = new ApplicationUnit())
+            {
+                events = unit.EventListeners.All().Where(p => p.IsActive).ToList<Model.EventListener>();
+            }
+
+
+            Assembly.LoadFile(@"C:\k2\listener\K2Field.SmartObjects.Services.CEP.EventStoreListener.dll");
+            Assembly.LoadFile(@"C:\k2\listener\K2Field.SmartObjects.Services.CEP.AzureServiceBusListener.dll");
+
+
+            var results = from type in AppDomain.CurrentDomain.GetAssemblies().SelectMany(s => s.GetTypes())
+              where typeof(ListenerInterface.IEventListener).IsAssignableFrom(type)
+              select type;
+
+            var types = results.Where(p => p.IsClass);
+
+            foreach(Model.EventListener el in events)
+            {
+                ListenerInterface.EventChannel ec = new ListenerInterface.EventChannel()
+                {
+                    Origin = el.Origin,
+                    OriginChannel = el.OriginChannel,
+                    EventSource = el.EventSource,
+                    EventType = el.EventType
+                };
+
+                if (el.Origin.Equals("Event Store", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    //ListenerInterface.EventChannel ec = new ListenerInterface.EventChannel()
+                    //{
+                    //    Origin = el.Origin,
+                    //    OriginChannel = el.OriginChannel,
+                    //    EventSource = el.EventSource,
+                    //    EventType = el.EventType                       
+                    //};
+
+                    string escon = IPAddress.Loopback.ToString() + ":1113";
+
+                    Type x = types.Where(p => p.Name.StartsWith("es", StringComparison.CurrentCultureIgnoreCase)).First();
+                    ListenerInterface.IEventListener list = Activator.CreateInstance(x) as ListenerInterface.IEventListener;
+                    list.ConnectionString = escon;
+                    list.EventChannel = ec;
+
+
+                    listeners.Add(list);
+                }
+
+                if (el.Origin.Equals("Azure Service Bus", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    string awscon = "Endpoint=sb://k2field.servicebus.windows.net/;SharedSecretIssuer=owner;SharedSecretValue=llu264DIUCEy8W1h56oMlCQobjQUYM7oLL2BLNDvQuw=";
+
+                    Type x = types.Where(p => p.Name.StartsWith("asb", StringComparison.CurrentCultureIgnoreCase)).First();
+                    ListenerInterface.IEventListener list = Activator.CreateInstance(x) as ListenerInterface.IEventListener;
+                    list.ConnectionString = awscon;
+                    list.EventChannel = ec;
+
+                    listeners.Add(list);
+                }
+            }
+
+
+            foreach (Type j in results.Where(p => p.IsClass))
+            {
+                
+
+
+                //IListener y = Activator.CreateInstance(t);
+                //IListener y = ()Activator.CreateInstance(j);
+                //listeners.Add(Activator.CreateInstance(j) as IListener);
+            }
+
+            foreach(ListenerInterface.IEventListener l in listeners)
+            {
+                l.MessageReceived += l_MessageReceived;
+                l.Start();
+            }
+
+
+            
+            // will reset database
+            //Database.SetInitializer(new DropCreateDatabaseAlways<Data.CEPListenerContext>());
+
+            //CreateDatabase();
 
             //_connection = EventStoreConnection.Create(new IPEndPoint(IPAddress.Loopback, 1113));
             //_connection.ConnectAsync();
@@ -75,6 +159,17 @@ namespace K2Field.SmartObjects.Services.CEP.Sandbox
             //StartReading();
             //ListenToAzureAsync();
             //btnInit.Text = "Running";
+        }
+
+        void l_MessageReceived(object sender, EventArgs e)
+        {
+            ListenerInterface.MessageReceivedArgs mra = e as ListenerInterface.MessageReceivedArgs;
+            this.Invoke((MethodInvoker)delegate
+            {
+                lbLog.Items.Insert(0, mra.EventChannel.Origin + " - " + mra.EventMessage.Body);
+            });
+            //MessageBox.Show(mra.EventMessage.Body);
+            
         }
 
         public void StartReading()
