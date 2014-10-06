@@ -1,4 +1,5 @@
-﻿using K2Field.SmartObjects.Services.CEP.ListenerInterface;
+﻿using K2Field.SmartObjects.Services.CEP.Interfaces;
+using Microsoft.ServiceBus.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace K2Field.SmartObjects.Services.CEP.AzureServiceBusListener
         public string SessionId { get; set; }
         public string To { get; set; }
         public string CorrelationId { get; set; }
+        public object RaisedEvent { get; set; }
 
     }
 }

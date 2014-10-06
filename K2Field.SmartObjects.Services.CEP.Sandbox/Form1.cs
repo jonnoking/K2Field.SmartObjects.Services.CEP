@@ -58,7 +58,7 @@ namespace K2Field.SmartObjects.Services.CEP.Sandbox
 
         private void btnInit_Click(object sender, EventArgs e)
         {
-            List<ListenerInterface.IEventListener> listeners = new List<ListenerInterface.IEventListener>();
+            List<Interfaces.IEventListener> listeners = new List<Interfaces.IEventListener>();
 
             //Type[] types = this.GetType().Assembly.GetTypes();
 
@@ -73,14 +73,14 @@ namespace K2Field.SmartObjects.Services.CEP.Sandbox
 
 
             var results = from type in AppDomain.CurrentDomain.GetAssemblies().SelectMany(s => s.GetTypes())
-              where typeof(ListenerInterface.IEventListener).IsAssignableFrom(type)
+              where typeof(Interfaces.IEventListener).IsAssignableFrom(type)
               select type;
 
             var types = results.Where(p => p.IsClass);
 
             foreach(Model.EventListener el in events)
             {
-                ListenerInterface.EventChannel ec = new ListenerInterface.EventChannel()
+                Interfaces.EventChannel ec = new Interfaces.EventChannel()
                 {
                     Origin = el.Origin,
                     OriginChannel = el.OriginChannel,
@@ -101,7 +101,7 @@ namespace K2Field.SmartObjects.Services.CEP.Sandbox
                     string escon = IPAddress.Loopback.ToString() + ":1113";
 
                     Type x = types.Where(p => p.Name.StartsWith("es", StringComparison.CurrentCultureIgnoreCase)).First();
-                    ListenerInterface.IEventListener list = Activator.CreateInstance(x) as ListenerInterface.IEventListener;
+                    Interfaces.IEventListener list = Activator.CreateInstance(x) as Interfaces.IEventListener;
                     list.ConnectionString = escon;
                     list.EventChannel = ec;
 
@@ -114,7 +114,7 @@ namespace K2Field.SmartObjects.Services.CEP.Sandbox
                     string awscon = "Endpoint=sb://k2field.servicebus.windows.net/;SharedSecretIssuer=owner;SharedSecretValue=llu264DIUCEy8W1h56oMlCQobjQUYM7oLL2BLNDvQuw=";
 
                     Type x = types.Where(p => p.Name.StartsWith("asb", StringComparison.CurrentCultureIgnoreCase)).First();
-                    ListenerInterface.IEventListener list = Activator.CreateInstance(x) as ListenerInterface.IEventListener;
+                    Interfaces.IEventListener list = Activator.CreateInstance(x) as ListenerInterface.IEventListener;
                     list.ConnectionString = awscon;
                     list.EventChannel = ec;
 

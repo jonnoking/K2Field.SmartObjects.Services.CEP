@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace K2Field.SmartObjects.Services.CEP.ListenerInterface.Log
+namespace K2Field.SmartObjects.Services.CEP.Common.Log
 {
     public class EventLog
     {

@@ -122,9 +122,13 @@
       <Project>{ff4368ae-37c3-4201-a857-d3dd0017cd8e}</Project>
       <Name>K2Field.SmartObjects.Services.CEP.ES</Name>
     </ProjectReference>
-    <ProjectReference Include="..\K2Field.SmartObjects.Services.CEP.ListenerInterface\K2Field.SmartObjects.Services.CEP.ListenerInterface.csproj">
+    <ProjectReference Include="..\K2Field.SmartObjects.Services.CEP.Interfaces\K2Field.SmartObjects.Services.CEP.Interfaces.csproj">
+      <Project>{74698462-f4ef-4156-969f-54fdb836ca60}</Project>
+      <Name>K2Field.SmartObjects.Services.CEP.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\K2Field.SmartObjects.Services.CEP.ListenerInterface\K2Field.SmartObjects.Services.CEP.Common.csproj">
       <Project>{abe0fe58-9b03-4372-8970-a1f05611dfd1}</Project>
-      <Name>K2Field.SmartObjects.Services.CEP.ListenerInterface</Name>
+      <Name>K2Field.SmartObjects.Services.CEP.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\K2Field.SmartObjects.Services.CEP.Model\K2Field.SmartObjects.Services.CEP.Model.csproj">
       <Project>{a629a369-4f97-471b-9579-220ae5bd7d63}</Project>

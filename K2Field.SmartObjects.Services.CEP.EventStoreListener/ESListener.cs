@@ -3,23 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using K2Field.SmartObjects.Services.CEP.ListenerInterface;
+using K2Field.SmartObjects.Services.CEP.Interfaces;
 using EventStore.ClientAPI;
 using System.Net;
 using System.Diagnostics;
 using K2Field.SmartObjects.Services.CEP.ES;
+using K2Field.SmartObjects.Services.CEP.Common;
 
 namespace K2Field.SmartObjects.Services.CEP.EventStoreListener
 {
     public class ESListener : IEventListener
     {
-        public string ConnectionString { get; set; }
-        public string ClientKey { get; set; }
-        public string ClientSecret { get; set; }
 
         public bool IsRunning { get; set; }
 
-        public EventChannel EventChannel { get; set; }
+        public IEventChannelInstance EventChannelInstance { get; set; }
+        public IEvent Event { get; set; }
 
         private System.Diagnostics.EventLog eventLog;
         IEventStoreConnection _connection = null;
@@ -29,14 +28,14 @@ namespace K2Field.SmartObjects.Services.CEP.EventStoreListener
 
         public ESListener()
         {
-            eventLog = ListenerInterface.Log.EventLog.GetLog();
+            eventLog = Common.Log.EventLog.GetLog();
         }
 
         public async Task Start()
         {
             await Task.Run(() =>
                 {
-                    string[] ESCon = ConnectionString.Split(':');
+                    string[] ESCon = EventChannelInstance.ConnectionString.Split(':');
                     if (ESCon != null && ESCon.Length == 2)
                     {
                         ESIP = ESCon[0];
@@ -74,9 +73,9 @@ namespace K2Field.SmartObjects.Services.CEP.EventStoreListener
                 ConnectToEventStore().Wait();
                 //_connection.SubscribeToAllAsync(false, Appeared, Dropped, EventStoreCredentials.Default);
 
-                _connection.SubscribeToStreamAsync(EventChannel.EventSource, true, Appeared, Dropped, EventStoreCredentials.Default);
+                _connection.SubscribeToStreamAsync(EventChannelInstance.Source, true, Appeared, Dropped, EventStoreCredentials.Default);
 
-                eventLog.WriteEntry("Event Store listening to: " + EventChannel.EventSource, EventLogEntryType.Information);
+                eventLog.WriteEntry("Event Store listening to: " + EventChannelInstance.Source, EventLogEntryType.Information);
             }
             catch(Exception ex)
             {
@@ -88,8 +87,8 @@ namespace K2Field.SmartObjects.Services.CEP.EventStoreListener
         {
             try
             {
-                ListenerInterface.MessageReceivedArgs args = new MessageReceivedArgs();
-                args.EventChannel = this.EventChannel;
+                Common.MessageReceivedArgs args = new Common.MessageReceivedArgs();
+                args.EventChannelInstance = this.EventChannelInstance;
 
                 ESMessage esm = new ESMessage()
                 {
@@ -97,7 +96,7 @@ namespace K2Field.SmartObjects.Services.CEP.EventStoreListener
                     MessageDateTime = resolvedEvent.Event.Created,
                     ContentType = resolvedEvent.Event.IsJson ? "application/json" : "text",
                     Body = resolvedEvent.Event.IsJson ? System.Text.Encoding.Default.GetString(resolvedEvent.Event.Data) : "SOME BYTE ARRAY - NEED TO IMPLEMENTED",
-                    ESEvent = resolvedEvent.Event
+                    RaisedEvent = resolvedEvent.Event
                 };
 
                 args.EventMessage = esm as IEventMessage;

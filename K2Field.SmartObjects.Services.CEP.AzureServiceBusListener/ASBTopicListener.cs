@@ -1,4 +1,6 @@
-﻿using K2Field.SmartObjects.Services.CEP.ListenerInterface;
+﻿using K2Field.SmartObjects.Services.CEP.Common;
+using K2Field.SmartObjects.Services.CEP.Interfaces;
+using K2Field.SmartObjects.Services.CEP.Model;
 using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
 using Microsoft.WindowsAzure;
@@ -11,59 +13,28 @@ using System.Threading.Tasks;
 
 namespace K2Field.SmartObjects.Services.CEP.AzureServiceBusListener
 {
-    public class ASBListener : IEventListener
+    public class ASBTopicListener : IEventListener
     {
-        public string ConnectionString { get; set; }
-        public string ClientKey { get; set; }
-        public string ClientSecret { get; set; }
-
         public bool IsRunning { get; set; }
 
-        public EventChannel EventChannel { get; set; }
+        public IEventChannelInstance EventChannelInstance { get; set; }
+        public IEvent Event { get; set; }
 
         private System.Diagnostics.EventLog eventLog;
 
 
-        public ASBListener()
+        public ASBTopicListener()
         {
-            eventLog = ListenerInterface.Log.EventLog.GetLog();
+            eventLog = Common.Log.EventLog.GetLog();
 
         }
 
         public async Task Start()
         {
             await Task.Run(() =>
-                {
-                    ListenToAzureQueueAsync();
-                    ListenToAzureSubscriptionAsync();
-                });
-        }
-
-        public async Task ListenToAzureQueueAsync()
-        {
-            await Task.Run(() =>
             {
-                try
-                {
-                    //string connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
-                    var namespaceManager = NamespaceManager.CreateFromConnectionString(ConnectionString);
-                    QueueClient Client = QueueClient.CreateFromConnectionString(ConnectionString, EventChannel.EventSource);
-                    eventLog.WriteEntry("Azure Service Bus Queue connected", EventLogEntryType.Information);
-                    while (true)
-                    {
-                        BrokeredMessage message = Client.Receive();
-                        if (message != null)
-                        {
-                            ProcessMessage(message);
-                        }
-                    } //message.Abandon();
-                }
-                catch(Exception ex)
-                {
-                    eventLog.WriteEntry("Azure Service Bus failed to connect " + ex.Message, EventLogEntryType.Error);
-                }
+                ListenToAzureSubscriptionAsync();
             });
-            //return true;
         }
 
         public async Task ListenToAzureSubscriptionAsync()
@@ -72,9 +43,19 @@ namespace K2Field.SmartObjects.Services.CEP.AzureServiceBusListener
             {
                 try
                 {
+                    string[] topicsub = null;
+                    if (EventChannelInstance.Source.Contains(":"))
+                    {
+                        topicsub = EventChannelInstance.Source.Split(':');
+                    }
+                    else
+                    {
+                        throw new Exception("Topic and Subscription not specified. Format must be Topic:Subscription");
+                    }
+
                     //string connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
-                    var namespaceManager = NamespaceManager.CreateFromConnectionString(ConnectionString);
-                    SubscriptionClient Client = SubscriptionClient.CreateFromConnectionString(ConnectionString, EventChannel.EventSource, EventChannel.EventSubType);
+                    var namespaceManager = NamespaceManager.CreateFromConnectionString(EventChannelInstance.ConnectionString);
+                    SubscriptionClient Client = SubscriptionClient.CreateFromConnectionString(EventChannelInstance.ConnectionString, topicsub[0].Trim(), topicsub[1].Trim());
                     eventLog.WriteEntry("Azure Service Bus Queue connected", EventLogEntryType.Information);
                     while (true)
                     {
@@ -133,7 +114,7 @@ namespace K2Field.SmartObjects.Services.CEP.AzureServiceBusListener
 
                 MessageReceivedArgs args = new MessageReceivedArgs()
                 {
-                    EventChannel = EventChannel,
+                    EventChannelInstance = EventChannelInstance,
                     EventMessage = msg,
                     EventTimestamp = DateTime.Now
                 };

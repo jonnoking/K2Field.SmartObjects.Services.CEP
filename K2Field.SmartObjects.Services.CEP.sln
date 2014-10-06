@@ -21,9 +21,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "K2Field.SmartForms.Toastr",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "K2Field.SmartObjects.Services.CEP.EventStoreListener", "K2Field.SmartObjects.Services.CEP.EventStoreListener\K2Field.SmartObjects.Services.CEP.EventStoreListener.csproj", "{965F326E-7B51-465D-906B-D3B2111E54F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "K2Field.SmartObjects.Services.CEP.ListenerInterface", "K2Field.SmartObjects.Services.CEP.ListenerInterface\K2Field.SmartObjects.Services.CEP.ListenerInterface.csproj", "{ABE0FE58-9B03-4372-8970-A1F05611DFD1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "K2Field.SmartObjects.Services.CEP.Common", "K2Field.SmartObjects.Services.CEP.ListenerInterface\K2Field.SmartObjects.Services.CEP.Common.csproj", "{ABE0FE58-9B03-4372-8970-A1F05611DFD1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "K2Field.SmartObjects.Services.CEP.AzureServiceBusListener", "K2Field.SmartObjects.Services.CEP.AzureServiceBusListener\K2Field.SmartObjects.Services.CEP.AzureServiceBusListener.csproj", "{D1BA5C1B-4001-476D-833F-E8CF593F9170}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "K2Field.SmartObjects.Services.CEP.Interfaces", "K2Field.SmartObjects.Services.CEP.Interfaces\K2Field.SmartObjects.Services.CEP.Interfaces.csproj", "{74698462-F4EF-4156-969F-54FDB836CA60}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -121,6 +123,14 @@ Global
 		{D1BA5C1B-4001-476D-833F-E8CF593F9170}.DebugRegisterCopyLocal|Any CPU.Build.0 = Debug|Any CPU
 		{D1BA5C1B-4001-476D-833F-E8CF593F9170}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1BA5C1B-4001-476D-833F-E8CF593F9170}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74698462-F4EF-4156-969F-54FDB836CA60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74698462-F4EF-4156-969F-54FDB836CA60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74698462-F4EF-4156-969F-54FDB836CA60}.DebugCopyLocal|Any CPU.ActiveCfg = Debug|Any CPU
+		{74698462-F4EF-4156-969F-54FDB836CA60}.DebugCopyLocal|Any CPU.Build.0 = Debug|Any CPU
+		{74698462-F4EF-4156-969F-54FDB836CA60}.DebugRegisterCopyLocal|Any CPU.ActiveCfg = Debug|Any CPU
+		{74698462-F4EF-4156-969F-54FDB836CA60}.DebugRegisterCopyLocal|Any CPU.Build.0 = Debug|Any CPU
+		{74698462-F4EF-4156-969F-54FDB836CA60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74698462-F4EF-4156-969F-54FDB836CA60}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

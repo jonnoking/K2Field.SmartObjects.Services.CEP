@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using K2Field.SmartObjects.Services.CEP.ListenerInterface;
+using K2Field.SmartObjects.Services.CEP.Interfaces;
 using EventStore.ClientAPI;
 
 namespace K2Field.SmartObjects.Services.CEP.EventStoreListener
@@ -19,7 +19,7 @@ namespace K2Field.SmartObjects.Services.CEP.EventStoreListener
         public string ReplyTo { get; set; }
         public string SessionId { get; set; }
         public string To { get; set; }
-        public RecordedEvent ESEvent { get; set; }
+        public object RaisedEvent { get; set; }
 
     }
 }
